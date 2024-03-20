@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Book</title>
+    <script type="text/javascript" src="js/jquery.min.3.6.js"></script>
+    <script type="text/javascript" src="js/turn.min.js"></script>
+    <script type="text/javascript" src="js/zoom.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="canvas">
+        <div id="nav-bar">
+            <div class="logo-area">
+                <img src="images/logo-sample.png" alt="logo">
+            </div>
+        </div>
+
+        <div id="flipbook-viewport">
+            <div id="flipbook-container">
+                <div class="pagination-previous">
+                    <img src="images/previous.png" alt="previous">
+                </div>
+                <div id="flipbook"></div>
+                <div class="pagination-next">
+                    <img src="images/next.png" alt="next">
+                </div>
+            </div>
+        </div>
+
+        <div id="control-bar">
+            <div class="button-bar left">
+                <div class="button zoomin">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAYFJREFUSEvVlLFOwlAYhc+prSaUSdrBqE8i+AoO6qAOxsFFHVx8CmOiibo4GBccZNI3AHwToyZQJtrBYo+5iRgsEJoAJt71/v93z/1zzk9M6XBKXPw9uBXFRSU6FFkC4ANoUKrR4tV8zqmP+mmfYkl2EH1eADqgUEuAJ4CvgBZArBEoArwu5GaOScbDHugDN8LODaFtkruFnF1JNwZRZ0PSncCy79r7mcCtKF5JhDrJzUHQLuQb/mARxfmc8zwI/ktx0P4oJ+Sy7zpmrj+nGcbyXOdXbSOMa5b0UsjPbo0EN8P4XcKZn3dOR4Lb8QmJY891FrOAJXHHz9tlU2yUppu6yhvtzjapW8915rKAp6M4aH/cJ+TSxGdsQpEItQyuWJdUsYjSsLD0+bgZdi4B7Y3yMcBbz7WPMvnYFElygujz/Dt51QR4BPhmkmcBayJKJnnmPm3B3keGLqGeXbEKwDMmoVTt3RWD/N2Fj73dhsHHBnf9nh7LRMCD4BMDp93x/8Bf6IjUF+dcNU0AAAAASUVORK5CYII=" alt="search">
+                    <div class="button-border"></div>
+                </div>
+            </div>
+            <div class="button-bar middle">
+                <div class="button first">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAHlJREFUSEvV1KsOwCAMBVAQU7P8/xfOTiFGEEvYAn3cmwqwpKdQWnIKWjnITZvD112fch7LW2j7Y1k/iBToQXsCE+xFTTCCqjCKijCDLmEWncLMJI6tOu2KkBO/WVlc7GMGVwcExVW4PyaCm2AEN8NefPOPnpm6f2wDCYp0F7Rzeo0AAAAASUVORK5CYII=" alt="first">
+                    <div class="button-border"></div>
+                </div>
+                <div class="button previous">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAHdJREFUSEvd06EOgDAMBNBNoGb5/y/EohAsFSQTY727pgKmm5dbeq0l6dUkt/wcPs7r3tsG/RIasj0wqM1DMItCsIK6sIou4Qj6CkfRKWyoeo1jFaetSEn8pI3iyx5HcPdAVNyFlXN2D2RsB5scSqwslIKZfn8P7vnKPBfKI1EAAAAAAElFTkSuQmCC" alt="previous">
+                    <div class="button-border"></div>
+                </div>
+                <div>
+                    <input type="text" id="current-page-input" autocomplete="off">
+                </div>
+                <div class="button next">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAHdJREFUSEvd06EOwCAMBFAQU7P7/y+cnUKM1JEs0LtrihiaPEp7rSXp1CS3/By+n/Ze5wH9Ero0zgHFadgeQXAJRnAZ9vAQvMLD8Az/wDYYdRvHKO6rmK12Fr1Qxas8y7C3JBLsodZOGkZQGkZRGmYSQ7cCxdPgDrl/PBc85p/oAAAAAElFTkSuQmCC" alt="next">
+                    <div class="button-border"></div>
+                </div>
+                <div class="button last">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAHZJREFUSEtjZKARYKSRuQzD2OA3X3//F+FmxelDdHmSggKf4RQZDIpoXIZTbDAuw6liMDbDqWYwuuFUNRjZcLwGgyQpyYnIyZGk5IbNUphLqRoUyIZRzWB0g6hiMLZMQrHBNMl5NCkraFq6kZLGKU7HuCyjmcEAiHx0F6Gqp2cAAAAASUVORK5CYII=" alt="last">
+                    <div class="button-border"></div>
+                </div>
+            </div>
+            <div class="button-bar right">
+                <div class="button fullscreen">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAFlJREFUSEtjZKARYKSRuQz0MfjN19//0X0gws2K1XJCalE0gRTjMohQkKHrHTUYHgL0SRWEIogU+VEXw0OLPkExmvPgAU7ToKBJsUlKziKklj7JjZArSJEHAMy5UBfcLnqkAAAAAElFTkSuQmCC" alt="fullscreen">
+                    <div class="button-border"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="js/main.js"></script>
+</html>
