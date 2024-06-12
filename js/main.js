@@ -1,6 +1,6 @@
 $(document).ready(async function () {
 	initialViewport();
-	loadApp(12);
+	loadApp(124);
 	$("#canvas").fadeIn(2000);
 });
 
@@ -16,13 +16,13 @@ function loadApp(pagesNum) {
 	}
 
 	flipbook.turn({
-		duration: 1000,
+		duration: 1200,
 		acceleration: !isChrome(),
 		gradients: true,
 		autoCenter: true,
 		elevation: 50,
 		pages: pagesNum,
-		display: $(document).width() <= 768 ? "single" : "double",
+		display: $(document).width() <= 438 ? "single" : "double",
 		when: {
 			turning: function (event, page, view) {
 				if (view.includes(1)) {
@@ -80,7 +80,7 @@ function loadPage(page, pageElement) {
 		$(this).appendTo(pageElement);
 		pageElement.find(".loader").remove();
 	});
-	img.attr("src", `pages/${page}.jpg`);
+	img.attr("src", `pages/${page}.png`);
 }
 
 function isChrome() {
@@ -90,17 +90,20 @@ function isChrome() {
 function initialViewport() {
 	const width = $(window).width();
 	const height = $(window).height();
-
-	if (width <= 768) {
-		$("#flipbook-viewport").css({
-			width: width,
-		});
+	if (width <= 438) {
 		$("#flipbook").removeClass("animated");
 		$("#flipbook").css({
-			width: `${width}px`,
-			height: `${width * 1.3}px`,
-			left: 0,
+			width: `${width * 1.4}px`,
+			height: `${width}px`,
+			transform: `rotate(90deg)`,
+			"transform-origin": "top left",
+			top: "0",
+			left: `${width}px`
 		});
+	} else {
+		$("#flipbook").css({
+			width: `${width}px`, height: `${width * 0.4}px`, left: `calc((100% - ${width}px) / 2)`
+		})
 	}
 }
 
@@ -156,15 +159,15 @@ function bindControlEvents(pagesNum) {
 		e.preventDefault();
 		const thisClick = Date.now();
 		if (thisClick - lastClick < 500) {
-			const rect = e.target.getBoundingClientRect();
-			const x = e.clientX - rect.left;
-			const y = e.clientY - rect.top;
 			zoom.to({
-				x,
-				y,
+				x: e.clientX,
+				y: e.clientY,
 				scale: 3,
+				padding: 1
 			});
-			return;
+			return document.body.style.overflow === "scroll"
+					? document.body.style.overflow = "hidden"
+					: document.body.style.overflow = "scroll";
 		}
 		lastClick = thisClick;
 	});

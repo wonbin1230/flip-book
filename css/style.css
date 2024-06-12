@@ -6,6 +6,7 @@
 
 body {
     background-color: #000000;
+    overflow: hidden;
 }
 
 #canvas {
@@ -20,7 +21,7 @@ body {
 }
 
 #nav-bar .logo-area {
-    width: 5%;
+    width: 8%;
 }
 
 #nav-bar img {
@@ -35,15 +36,14 @@ body {
 
 #flipbook-viewport #container {
     position: relative;
-    width: 1000px;
-    height: 650px;
+    width: 100%;
 }
 
 #flipbook-viewport #flipbook {
     position: absolute;
-    left: calc((100% - 1000px) / 2);
-    width: 1000px;
-    height: 650px;
+    left: calc((100% - 1920px) / 2);
+    width: 1920px;
+    height: 768px;
     transition: margin-left 1s;
 	-webkit-transition: margin-left 1s;
 	-moz-transition: margin-left 1s;
@@ -234,7 +234,7 @@ body {
         display: none;
     }
     #nav-bar .logo-area {
-        width: 15%;
+        width: 30%;
     }
 }
 
