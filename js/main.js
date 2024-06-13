@@ -49,7 +49,7 @@ function loadApp(pagesNum) {
 				for (let i = 0; i < pages.length; i++) {
 					addPage(pages[i], $(this));
 				}
-			}
+			},
 		},
 	});
 
@@ -98,12 +98,14 @@ function initialViewport() {
 			transform: `rotate(90deg)`,
 			"transform-origin": "top left",
 			top: "0",
-			left: `${width}px`
+			left: `${width}px`,
 		});
 	} else {
 		$("#flipbook").css({
-			width: `${width}px`, height: `${width * 0.4}px`, left: `calc((100% - ${width}px) / 2)`
-		})
+			width: `${width}px`,
+			height: `${width * 0.4}px`,
+			left: `calc((100% - ${width}px) / 2)`,
+		});
 	}
 }
 
@@ -155,21 +157,52 @@ function bindControlEvents(pagesNum) {
 		toggleFullScreen();
 	});
 
-	$("#flipbook").on("click", function (e) {
-		e.preventDefault();
-		const thisClick = Date.now();
-		if (thisClick - lastClick < 500) {
-			zoom.to({
-				x: e.clientX,
-				y: e.clientY,
-				scale: 3,
-				padding: 1
-			});
-			return document.body.style.overflow === "scroll"
-					? document.body.style.overflow = "hidden"
-					: document.body.style.overflow = "scroll";
-		}
-		lastClick = thisClick;
+	$("#flipbook-viewport").zoom({
+		flipbook: $("#flipbook"),
+	});
+
+	function zoomTo(event) {
+		setTimeout(function () {
+			if ($("#flipbook-viewport").data().regionClicked) {
+				$("#flipbook-viewport").data().regionClicked = false;
+			} else {
+				if ($("#flipbook-viewport").zoom("value") == 1) {
+					$("#flipbook-viewport").zoom("zoomIn", event);
+				} else {
+					$("#flipbook-viewport").zoom("zoomOut");
+				}
+			}
+		}, 1);
+	}
+
+	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
+
+	// $("#flipbook").on("click", function (e) {
+	// 	e.preventDefault();
+	// 	const thisClick = Date.now();
+	// 	if (thisClick - lastClick < 500) {
+	// 		zoom.to({
+	// 			x: e.clientX,
+	// 			y: e.clientY,
+	// 			scale: 3,
+	// 			padding: 1
+	// 		});
+	// 		return document.body.style.overflow === "scroll"
+	// 				? document.body.style.overflow = "hidden"
+	// 				: document.body.style.overflow = "scroll";
+	// 	}
+	// 	lastClick = thisClick;
+	// });
+
+	$(window).on("resize", function () {
+		$("#flipbook").turn("destroy").remove();
+		setTimeout(function () {
+			const newFlipbook = $(`<div id="flipbook"></div>`);
+			$(".pagination-next").before(newFlipbook);
+			initialViewport();
+			loadApp(124);
+			$("#canvas").fadeIn(2000);
+		}, 500)
 	});
 }
 
