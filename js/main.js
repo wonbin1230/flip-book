@@ -1,6 +1,7 @@
 $(document).ready(async function () {
 	initialViewport();
 	loadApp(124);
+	bindControlEvents(124);
 	$("#canvas").fadeIn(2000);
 });
 
@@ -55,8 +56,6 @@ function loadApp(pagesNum) {
 
 	currentPageText = `1`;
 	$("#current-page-input").val(`1/${pagesNum}`);
-
-	bindControlEvents(pagesNum);
 }
 
 function addPage(page, book) {
@@ -90,6 +89,34 @@ function isChrome() {
 function initialViewport() {
 	const width = $(window).width();
 	const height = $(window).height();
+	if (isMobileDevice()) {
+		if (width > 438) {
+			$("#canvas").css({
+				width: "100dvw",
+				height: "100dvh"
+			})
+			$("#flipbook-viewport").css({
+				height: "80%"
+			})
+		} else if (width <= 438) {
+			$("#canvas").css({
+				width: "100vw",
+				height: "100vh"
+			})
+			$("#flipbook-viewport").css({
+				height: "85%"
+			})
+		}
+	} else {
+		$("#canvas").css({
+			width: "100vw",
+			height: "100vh"
+		})
+		$("#flipbook-viewport").css({
+			height: "85%"
+		})
+	}
+
 	if (width <= 438) {
 		$("#flipbook").removeClass("animated");
 		$("#flipbook").css({
@@ -202,7 +229,7 @@ function bindControlEvents(pagesNum) {
 			initialViewport();
 			loadApp(124);
 			$("#canvas").fadeIn(2000);
-		}, 500)
+		}, 500);
 	});
 }
 
@@ -228,3 +255,13 @@ const boxShadowHandler = {
 		}
 	},
 };
+
+function isMobileDevice() {
+	let mobileDevices = ["Android", "webOS", "iPhone", "iPad", "iPod", "BlackBerry", "Windows Phone"];
+	for (var i = 0; i < mobileDevices.length; i++) {
+		if (navigator.userAgent.match(mobileDevices[i])) {
+			return true;
+		}
+	}
+	return false;
+}
