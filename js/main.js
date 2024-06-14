@@ -12,7 +12,7 @@ function loadApp(pagesNum) {
 	const flipbook = $("#flipbook");
 
 	if (flipbook.width() === 0 || flipbook.height() === 0) {
-		setTimeout(loadApp, 10);
+		setTimeout(loadApp, 124);
 		return;
 	}
 
@@ -132,7 +132,7 @@ function initialViewport() {
 	} else {
 		$("#flipbook").css({
 			width: `${width}px`,
-			height: `${width * 0.4}px`,
+			height: isMobileDevice() ? `${width * 0.35}px` : `${width * 0.4}px`,
 			left: `calc((100% - ${width}px) / 2)`,
 		});
 	}
