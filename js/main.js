@@ -189,7 +189,7 @@ function bindControlEvents(pagesNum) {
 	$("#flipbook-viewport").zoom({
 		flipbook: $("#flipbook"),
 	});
-	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
+	$("#flipbook-viewport").bind("zoom.tap", zoomTo);
 
 	// $("#flipbook").on("click", function (e) {
 	// 	e.preventDefault();
@@ -219,7 +219,7 @@ function bindControlEvents(pagesNum) {
 			$("#flipbook-viewport").zoom({
 				flipbook: $("#flipbook"),
 			});
-			if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
+			$("#flipbook-viewport").bind("zoom.tap", zoomTo);
 		}, 500);
 	});
 }
