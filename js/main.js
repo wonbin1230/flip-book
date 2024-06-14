@@ -90,24 +90,26 @@ function initialViewport() {
 	const width = $(window).width();
 	const height = $(window).height();
 	if (isMobileDevice()) {
+		$(".pagination-previous").css({ display: "none" });
+		$(".pagination-next").css({ display: "none" });
+		$(".button.fullscreen").css({ visibility: "hidden" });
+		$("#canvas").css({
+			width: "100dvw",
+			height: "100dvh"
+		})
 		if (width > 438) {
-			$("#canvas").css({
-				width: "100dvw",
-				height: "100dvh"
-			})
 			$("#flipbook-viewport").css({
 				height: "80%"
 			})
 		} else if (width <= 438) {
-			$("#canvas").css({
-				width: "100vw",
-				height: "100vh"
-			})
 			$("#flipbook-viewport").css({
 				height: "85%"
 			})
 		}
 	} else {
+		$(".pagination-previous").css({ display: "block" });
+		$(".pagination-next").css({ display: "block" });
+		$(".button.fullscreen").css({ visibility: "visible" });
 		$("#canvas").css({
 			width: "100vw",
 			height: "100vh"
@@ -187,21 +189,6 @@ function bindControlEvents(pagesNum) {
 	$("#flipbook-viewport").zoom({
 		flipbook: $("#flipbook"),
 	});
-
-	function zoomTo(event) {
-		setTimeout(function () {
-			if ($("#flipbook-viewport").data().regionClicked) {
-				$("#flipbook-viewport").data().regionClicked = false;
-			} else {
-				if ($("#flipbook-viewport").zoom("value") == 1) {
-					$("#flipbook-viewport").zoom("zoomIn", event);
-				} else {
-					$("#flipbook-viewport").zoom("zoomOut");
-				}
-			}
-		}, 1);
-	}
-
 	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 
 	// $("#flipbook").on("click", function (e) {
@@ -229,6 +216,10 @@ function bindControlEvents(pagesNum) {
 			initialViewport();
 			loadApp(124);
 			$("#canvas").fadeIn(2000);
+			$("#flipbook-viewport").zoom({
+				flipbook: $("#flipbook"),
+			});
+			if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 		}, 500);
 	});
 }
@@ -255,6 +246,20 @@ const boxShadowHandler = {
 		}
 	},
 };
+
+function zoomTo(event) {
+	setTimeout(function () {
+		if ($("#flipbook-viewport").data().regionClicked) {
+			$("#flipbook-viewport").data().regionClicked = false;
+		} else {
+			if ($("#flipbook-viewport").zoom("value") == 1) {
+				$("#flipbook-viewport").zoom("zoomIn", event);
+			} else {
+				$("#flipbook-viewport").zoom("zoomOut");
+			}
+		}
+	}, 1);
+}
 
 function isMobileDevice() {
 	let mobileDevices = ["Android", "webOS", "iPhone", "iPad", "iPod", "BlackBerry", "Windows Phone"];

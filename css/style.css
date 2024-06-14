@@ -226,21 +226,8 @@ body {
 }
 
 @media (max-width: 438px) {
-    #canvas {
-        width: 100dvw;
-        height: 100dvh
-    }
-    .pagination-previous, .pagination-next {
-        display: none;
-    }
     #nav-bar .logo-area {
         width: 30%;
-    }
-}
-
-@media (max-width: 768px) {
-    .button.fullscreen {
-        visibility: hidden;
     }
 }
 
