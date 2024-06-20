@@ -106,6 +106,9 @@ function initialViewport() {
 				height: "85%"
 			})
 		}
+		$("body").css({
+			overflowY: "auto"
+		})
 	} else {
 		$(".pagination-previous").css({ display: "block" });
 		$(".pagination-next").css({ display: "block" });
@@ -116,6 +119,9 @@ function initialViewport() {
 		})
 		$("#flipbook-viewport").css({
 			height: "85%"
+		})
+		$("body").css({
+			overflowY: "hidden"
 		})
 	}
 
