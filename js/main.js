@@ -186,9 +186,8 @@ function bindControlEvents(pagesNum) {
 		toggleFullScreen();
 	});
 
-	$("#flipbook-viewport").zoom({
-		flipbook: $("#flipbook"),
-	});
+	zoomInit()
+
 	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 
 	// $("#flipbook").on("click", function (e) {
@@ -216,9 +215,7 @@ function bindControlEvents(pagesNum) {
 			initialViewport();
 			loadApp(124);
 			$("#canvas").fadeIn(2000);
-			$("#flipbook-viewport").zoom({
-				flipbook: $("#flipbook"),
-			});
+			zoomInit()
 			if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 		}, 500);
 	});
@@ -246,6 +243,28 @@ const boxShadowHandler = {
 		}
 	},
 };
+
+function zoomInit() {
+	return (
+		$("#flipbook-viewport").zoom({
+			flipbook: $("#flipbook"),
+
+			max: function() {
+				return 2214 / $("#flipbook").width();
+			},
+
+			when:  {
+				swipeLeft: function() {
+					$("#flipbook").turn("next");
+				},
+	
+				swipeRight: function() {
+					$("#flipbook").turn("previous");
+				},
+			}
+		})
+	)
+}
 
 function zoomTo(event) {
 	setTimeout(function () {
