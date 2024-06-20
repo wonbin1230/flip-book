@@ -6,7 +6,7 @@ $(document).ready(async function () {
 });
 
 let currentPageText = "";
-let lastClick = 0;
+let currentPage = 1;
 
 function loadApp(pagesNum) {
 	const flipbook = $("#flipbook");
@@ -44,6 +44,7 @@ function loadApp(pagesNum) {
 			turned: function (event, page, view) {
 				$(this).turn("center");
 				boxShadowHandler.add();
+				currentPage = page;
 			},
 
 			missing: function (event, pages) {
@@ -254,12 +255,14 @@ let originalWidth = $("body").width();
 function resizeFn() {
 	const currentWidth = $("body").width();
 	if (currentWidth - originalWidth >= 350 || originalWidth - currentWidth >= 350) {
+		const toPage = currentPage;
 		$("#flipbook").turn("destroy").remove();
 		const newFlipbook = $(`<div id="flipbook"></div>`);
 		$(".pagination-next").before(newFlipbook);
 		initialViewport();
 		loadApp(124);
 		$("#canvas").fadeIn(2000);
+		$("#flipbook").turn("page", toPage)
 		zoomInit();
 		if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 		originalWidth = currentWidth;
