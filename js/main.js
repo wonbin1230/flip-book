@@ -99,7 +99,7 @@ function initialViewport() {
 		})
 		if (width > 438) {
 			$("#flipbook-viewport").css({
-				height: "80%"
+				height: "75%"
 			})
 		} else if (width <= 438) {
 			$("#flipbook-viewport").css({
