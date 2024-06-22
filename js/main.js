@@ -274,7 +274,7 @@ function zoomInit() {
 		flipbook: $("#flipbook"),
 
 		max: function () {
-			return 2214 / $("#flipbook").width();
+			return 4000 / $("#flipbook").width();
 		},
 
 		when: {
