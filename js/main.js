@@ -1,18 +1,33 @@
+let pageURLs = [];
 $(document).ready(async function () {
+	pageURLs = await fetchURL();
+	const pageQuantity = 124;
 	initialViewport();
-	loadApp(124);
-	bindControlEvents(124);
+	loadApp(pageQuantity);
+	bindControlEvents(pageQuantity);
 	$("#canvas").fadeIn(2000);
 });
 
 let currentPageText = "";
 let currentPage = 1;
 
+const fetchURL = async () => {
+	const url = `https://sheets.googleapis.com/v4/spreadsheets/1wHbKFxn839JaTb5YhS0g3-cv9_ypZHeKGcY60_00WyQ/values/A2:B125?key=AIzaSyCDfQdbfcR68abAb62u5GI1DGmJuOBO0gs`
+	const res = await fetch(url)
+	const data = await res.json()
+	return data.values.map((e) => {
+		return {
+			page: parseInt(e[0]),
+			url: e[1]
+		}
+	});
+}
+
 function loadApp(pagesNum) {
 	const flipbook = $("#flipbook");
 
 	if (flipbook.width() === 0 || flipbook.height() === 0) {
-		setTimeout(loadApp, 124);
+		setTimeout(loadApp, pagesNum);
 		return;
 	}
 
@@ -61,14 +76,18 @@ function loadApp(pagesNum) {
 
 function addPage(page, book) {
 	const element = $("<div />", {});
-
 	if (book.turn("addPage", element, page)) {
-		element.html('<div class="gradient"></div><div class="loader"></div>');
+		if (pageURLs[page - 1].url === "#") {
+			element.html(`<div class="gradient"></div>`);
+		} else {
+			element.html(`<a href="${pageURLs[page - 1].url}" target="GallantOutDoor" title="product"><div class="gradient"></div></a>`);
+		}
 		loadPage(page, element);
 	}
 }
 
 function loadPage(page, pageElement) {
+	const anchor = $(`<a href="${pageURLs[page - 1].url}" target="GallantOutDoor" title="product" style="width: 100%; height: 100%;"></a>`);
 	const img = $("<img />");
 
 	img.mousedown(function (e) {
@@ -77,8 +96,12 @@ function loadPage(page, pageElement) {
 
 	img.on("load", function () {
 		$(this).css({ width: "100%", height: "100%" });
-		$(this).appendTo(pageElement);
-		pageElement.find(".loader").remove();
+		if (pageURLs[page - 1].url === "#") {
+			$(this).appendTo(pageElement);
+		} else {
+			anchor.append($(this));
+			anchor.appendTo(pageElement);
+		}
 	});
 	img.attr("src", `pages/${page}.png`);
 }
@@ -91,35 +114,23 @@ function initialViewport() {
 	const width = $(window).width();
 	const height = $(window).height();
 	if (isMobileDevice()) {
-		$(".pagination-previous").css({ display: "none" });
-		$(".pagination-next").css({ display: "none" });
-		$(".button.fullscreen").css({ visibility: "hidden" });
+		togglePaginationPrevious("none");
+		togglePaginationNext("none");
+		toggleFullScreenBtn("hidden");
 		$("#canvas").css({
 			width: "100dvw",
 			height: "100dvh",
 		});
-		if (width > 438) {
-			$("#flipbook-viewport").css({
-				height: `${width * 0.35}px`,
-			});
-		} else if (width <= 438) {
-			$("#flipbook-viewport").css({
-				height: "85%",
-			});
-		}
 		$("body").css({
 			overflowY: "auto",
 		});
 	} else {
-		$(".pagination-previous").css({ display: "block" });
-		$(".pagination-next").css({ display: "block" });
-		$(".button.fullscreen").css({ visibility: "visible" });
+		togglePaginationPrevious("block");
+		togglePaginationNext("block");
+		toggleFullScreenBtn("visible");
 		$("#canvas").css({
 			width: "100vw",
 			height: "100vh",
-		});
-		$("#flipbook-viewport").css({
-			height: "85%",
 		});
 		$("body").css({
 			overflowY: "hidden",
@@ -129,18 +140,16 @@ function initialViewport() {
 	if (width <= 438) {
 		$("#flipbook").removeClass("animated");
 		$("#flipbook").css({
-			width: `${width * 1.4}px`,
+			width: `${1754 * (width / 2481) * 2}px`,
 			height: `${width}px`,
 			transform: `rotate(90deg)`,
 			"transform-origin": "top left",
-			top: "0",
 			left: `${width}px`,
 		});
 	} else {
 		$("#flipbook").css({
 			width: `${width}px`,
-			height: isMobileDevice() ? `${width * 0.35}px` : `${width * 0.4}px`,
-			left: `calc((100% - ${width}px) / 2)`,
+			height: `${1754 * (width / 2481) / 2}px`,
 		});
 	}
 }
@@ -195,7 +204,7 @@ function bindControlEvents(pagesNum) {
 
 	zoomInit();
 
-	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
+	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.doubleTap", zoomTo);
 
 	// $("#flipbook").on("click", function (e) {
 	// 	e.preventDefault();

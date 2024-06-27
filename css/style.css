@@ -41,9 +41,8 @@ body {
 
 #flipbook-viewport #flipbook {
     position: absolute;
-    left: calc((100% - 1920px) / 2);
-    width: 1920px;
-    height: 768px;
+    width: 100vw;
+    height: calc(1754 * (100vw / 2481) / 2);
     transition: margin-left 1s;
 	-webkit-transition: margin-left 1s;
 	-moz-transition: margin-left 1s;
