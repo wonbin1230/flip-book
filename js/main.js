@@ -80,14 +80,14 @@ function addPage(page, book) {
 		if (pageURLs[page - 1].url === "#") {
 			element.html(`<div class="gradient"></div>`);
 		} else {
-			element.html(`<a href="${pageURLs[page - 1].url}" target="${isMobileDevice() ? '_blank' : 'GallantOutDoor'}" title="product"><div class="gradient"></div></a>`);
+			element.html(`<a href="${pageURLs[page - 1].url}" target="${isMobileDevice() ? '_blank' : 'GallantOutDoor'}" title="立即前往商品頁面"><div class="gradient"></div></a>`);
 		}
 		loadPage(page, element);
 	}
 }
 
 function loadPage(page, pageElement) {
-	const anchor = $(`<a href="${pageURLs[page - 1].url}" target="${isMobileDevice() ? '_blank' : 'GallantOutDoor'}" title="product" style="width: 100%; height: 100%;"></a>`);
+	const anchor = $(`<a href="${pageURLs[page - 1].url}" target="${isMobileDevice() ? '_blank' : 'GallantOutDoor'}" title="立即前往商品頁面" style="width: 100%; height: 100%;"></a>`);
 	const img = $("<img />");
 
 	img.mousedown(function (e) {
