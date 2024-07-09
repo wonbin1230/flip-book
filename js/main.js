@@ -114,27 +114,19 @@ function initialViewport() {
 	const width = $(window).width();
 	const height = $(window).height();
 	if (isMobileDevice()) {
-		togglePaginationPrevious("none");
-		togglePaginationNext("none");
-		toggleFullScreenBtn("hidden");
-		$("#canvas").css({
-			width: "100dvw",
-			height: "100dvh",
-		});
-		$("body").css({
-			overflowY: "auto",
-		});
+		hidePaginationPrevious();
+		hidePaginationNext();
+		hideFullScreenBtn();
+		mobileSize();
+		showScrollY();
+		hideZoomInBtn();
 	} else {
-		togglePaginationPrevious("block");
-		togglePaginationNext("block");
-		toggleFullScreenBtn("visible");
-		$("#canvas").css({
-			width: "100vw",
-			height: "100vh",
-		});
-		$("body").css({
-			overflowY: "hidden",
-		});
+		showPaginationPrevious();
+		showPaginationNext();
+		showFullScreenBtn();
+		desktopSize();
+		hideScrollY();
+		showZoomInBtn();
 	}
 
 	if (width <= 438) {
@@ -155,6 +147,18 @@ function initialViewport() {
 }
 
 function bindControlEvents(pagesNum) {
+	$(".button.zoom-icon").on("click", function () {
+		if ($(this).hasClass("zoom-in")) {
+			$("#flipbook-viewport").zoom("zoomIn");
+			$(this).removeClass("zoom-in");
+			$(this).addClass("zoom-out");
+		} else {
+			$("#flipbook-viewport").zoom("zoomOut");
+			$(this).removeClass("zoom-out");
+			$(this).addClass("zoom-in");
+		}
+	});
+
 	$(".pagination-previous, .button.previous").on("click", function () {
 		$("#flipbook").turn("previous");
 	});
@@ -203,25 +207,6 @@ function bindControlEvents(pagesNum) {
 	});
 
 	zoomInit();
-
-	if (!$.isTouch) $("#flipbook-viewport").bind("zoom.doubleTap", zoomTo);
-
-	// $("#flipbook").on("click", function (e) {
-	// 	e.preventDefault();
-	// 	const thisClick = Date.now();
-	// 	if (thisClick - lastClick < 500) {
-	// 		zoom.to({
-	// 			x: e.clientX,
-	// 			y: e.clientY,
-	// 			scale: 3,
-	// 			padding: 1
-	// 		});
-	// 		return document.body.style.overflow === "scroll"
-	// 				? document.body.style.overflow = "hidden"
-	// 				: document.body.style.overflow = "scroll";
-	// 	}
-	// 	lastClick = thisClick;
-	// });
 
 	$(window).on("resize", debounce(resizeFn, 500))
 }
@@ -273,7 +258,6 @@ function resizeFn() {
 		$("#canvas").fadeIn(2000);
 		$("#flipbook").turn("page", toPage)
 		zoomInit();
-		if (!$.isTouch) $("#flipbook-viewport").bind("zoom.tap", zoomTo);
 		originalWidth = currentWidth;
 	}
 }
@@ -294,10 +278,27 @@ function zoomInit() {
 			swipeRight: function () {
 				$("#flipbook").turn("previous");
 			},
+
+			zoomIn: function() {
+				$(".button.zoom-icon img").attr("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAX5JREFUSEvVlM8uA1EUxr9vzJB0umpnFoIn0XoFCyywEAsbLGw8hUhIsLEQm1roijdo600ESTtWnVmYmk+uaFL9YybRSpztPed3z73n+w4xoeCEuPh78GsUl5RoT2QZgA+gSalOi+eFnNNIe+lAx5LsIHo/BbRLoZ4A9wCfAM2CWCZQAnhRzE0dkIxHXTAAboadS0IbJLeKObvaXxhEnVVJ1wIrvmvvZAK/RvFiIjRIrg2DdiFf8FuLKBVyzsMw+LeOg/ZbJSEXfNcx//pjNMO4bkmPxfz0eiq4FcYvEo79vHOUCm7HhyQOPNeZywKWxE0/b1dMciuM1V/kuc7nK5vtzgapK891ZrKAJ9Nx0H67Scj5sf+xMUUi1DOoYkVS1SLKo8wyoONW2DkDtJ2mY4BXnmvvZ9KxSZLkBNH7yZfzaglwB/DZOM8ClkWUjfPMeXeQqcPrTejZFUsAPCMSSrXeXWFUMwr+6+02Cv5rcFfv/Z2PBTwMPjZw/wD/H/gD/r7EFzmOkcIAAAAASUVORK5CYII=");
+				const links = $("#flipbook a");
+				links.each(function() {
+					$(this).addClass("disabled");
+				})
+			},
+
+			zoomOut: function() {
+				$(".button.zoom-icon img").attr("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAYFJREFUSEvVlLFOwlAYhc+prSaUSdrBqE8i+AoO6qAOxsFFHVx8CmOiibo4GBccZNI3AHwToyZQJtrBYo+5iRgsEJoAJt71/v93z/1zzk9M6XBKXPw9uBXFRSU6FFkC4ANoUKrR4tV8zqmP+mmfYkl2EH1eADqgUEuAJ4CvgBZArBEoArwu5GaOScbDHugDN8LODaFtkruFnF1JNwZRZ0PSncCy79r7mcCtKF5JhDrJzUHQLuQb/mARxfmc8zwI/ktx0P4oJ+Sy7zpmrj+nGcbyXOdXbSOMa5b0UsjPbo0EN8P4XcKZn3dOR4Lb8QmJY891FrOAJXHHz9tlU2yUppu6yhvtzjapW8915rKAp6M4aH/cJ+TSxGdsQpEItQyuWJdUsYjSsLD0+bgZdi4B7Y3yMcBbz7WPMvnYFElygujz/Dt51QR4BPhmkmcBayJKJnnmPm3B3keGLqGeXbEKwDMmoVTt3RWD/N2Fj73dhsHHBnf9nh7LRMCD4BMDp93x/8Bf6IjUF+dcNU0AAAAASUVORK5CYII=");
+				const links = $("#flipbook a");
+				links.each(function() {
+					$(this).removeClass("disabled");
+				})
+			}
 		},
 	});
 }
 
+// Deprecated
 function zoomTo(event) {
 	setTimeout(function () {
 		if ($("#flipbook-viewport").data().regionClicked) {

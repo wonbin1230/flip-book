@@ -22,6 +22,7 @@ body {
 
 #nav-bar .logo-area {
     width: 8%;
+    margin-left: 2%;
 }
 
 #nav-bar img {
@@ -151,9 +152,20 @@ body {
     margin-top: 12px;
 }
 
-.button.zoomin:hover::before {
+.button.zoom-in:hover::before {
     position: absolute;
     content: "ZoomIn";
+    color: white;
+    width: 42px;
+    font-size: 12px;
+    text-align: center;
+    left: 0;
+    top: -15px;
+}
+
+.button.zoom-out:hover::before {
+    position: absolute;
+    content: "ZoomOut";
     color: white;
     width: 42px;
     font-size: 12px;
@@ -224,12 +236,13 @@ body {
     height: 25px;
 }
 
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
 @media (max-width: 438px) {
     #nav-bar .logo-area {
         width: 30%;
     }
-}
-
-.button.zoomin {
-    visibility: hidden;
 }
